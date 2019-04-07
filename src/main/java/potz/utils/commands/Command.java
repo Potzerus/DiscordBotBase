@@ -6,7 +6,7 @@ import org.javacord.api.entity.user.User;
 import potz.utils.database.ServerStorage;
 
 public abstract class Command {
-    ServerStorage serverStorage;
+    protected ServerStorage serverStorage;
 
     public abstract void execute(User sender, TextChannel c, Server s, String[] args);
 

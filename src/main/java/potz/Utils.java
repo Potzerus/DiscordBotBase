@@ -1,5 +1,14 @@
 package potz;
 
+import org.javacord.api.entity.permission.PermissionType;
+import org.javacord.api.entity.permission.Role;
+import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
 public class Utils {
@@ -30,6 +39,22 @@ public class Utils {
             args[indx] = ctrl.next();
         }
         return args;
+    }
+
+    public static String getToken(){
+        String token = "";
+        try {
+            token = new String(Files.readAllBytes(Paths.get("Token")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return token;
+
+    }
+
+    public static boolean hasPermission(User sender, Server s, PermissionType type){
+        List<Role> roles= sender.getRoles(s);
+        return roles.get(roles.size()-1).getAllowedPermissions().contains(type);
     }
 
 }

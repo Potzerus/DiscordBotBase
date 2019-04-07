@@ -9,7 +9,7 @@ public class Char {
 
     private ServerStorage parent;
     private Long userId;
-    private HashMap<String, String> stats = new HashMap<>();
+    private HashMap<String, Capsule> stats = new HashMap<>();
 
 
     Char(long userId, ServerStorage parent) {
@@ -47,19 +47,19 @@ public class Char {
         return user;
     }
 
-    public boolean addStat(String name, String value){
+    public boolean addStat(String name, Object value){
         if(stats.containsKey(name)){
-            stats.put(name,value);
+            stats.put(name,new Capsule<>(value));
             return true;
         }
         return false;
     }
 
-    public void setStat(String name, String value) {
+    public void setStat(String name, Object value) {
         if (stats.containsKey(name)) {
-            stats.replace(name, value);
+            stats.replace(name, new Capsule<>(value));
         } else {
-            stats.put(name, value);
+            stats.put(name,new Capsule<>(value));
         }
     }
 
@@ -73,15 +73,15 @@ public class Char {
             return "No Stats to display";
         } else {
             Iterator<String> keys = stats.keySet().iterator();
-            Iterator<String> values = stats.values().iterator();
-            while (keys.hasNext()) {
-                output.append(keys.next() + ": " + values.next() + '\n');
-            }
+            //Iterator<String> values = stats.values().iterator();
+            //while (keys.hasNext()) {
+            //    output.append(keys.next() + ": " + values.next() + '\n');
+            //}
         }
         return output.toString();
     }
 
-    public String getStat(String name){
+    public Object getStat(String name){
         return stats.get(name);
     }
 

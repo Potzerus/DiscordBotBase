@@ -10,10 +10,11 @@ import java.util.Map;
 
 public class State {
 
-    private Map<Long, ServerStorage> servers = new HashMap<>();
+    private Map<Long, ServerStorage> servers;
 
     public State() {
-        loadFile();
+        servers = new HashMap<>();
+        //loadFile();
     }
 
     public String toString() {
@@ -46,7 +47,7 @@ public class State {
 
     }
 
-    public Char getPlayerDirectly(Long serverId, Long userId) {
+    public Char getPlayerDirectly(long serverId, long userId) {
         ServerStorage intermediate;
         try {
             intermediate = this.getServer(serverId);
@@ -83,13 +84,13 @@ public class State {
         }
     }
 
-    public ServerStorage getServer(Long serverId) {
+    public ServerStorage getServer(long serverId) {
 
         return servers.getOrDefault(serverId, addServer(serverId));
 
     }
 
-    public String checkPlayer(Long serverId, Long userId) {
+    public String checkPlayer(long serverId, long userId) {
 
         Char player = getPlayerDirectly(serverId, userId);
         return player.toString();
