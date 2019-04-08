@@ -24,7 +24,7 @@ public class DefaultCommandMap implements CommandMap {
 
     @Override
     public Command getCommand(String cmdString) {
-        return cmds.getOrDefault(cmdString, new InvalidCommand());
+        return cmds.getOrDefault(cmdString, new InvalidCommand(null));
     }
 
     @Override

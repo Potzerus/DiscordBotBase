@@ -36,11 +36,10 @@ public abstract class Module {
         this.commandMap = new DefaultCommandMap(state.getServer(server.getId()));
         this.prefix = prefix;
         api.addMessageCreateListener(event -> {
-            if (event.getServer().isPresent() && event.getServer().get().getId() == serverId && !event.getMessageAuthor().isWebhook() && !event.getMessageAuthor().asUser().get().isYourself()
-            &&Utils.hasPermission(event.getMessageAuthor().asUser().get(),event.getServer().get(),PermissionType.MANAGE_MESSAGES)) {
+            if (event.getServer().isPresent() && event.getServer().get().getId() == serverId && !event.getMessageAuthor().isWebhook() && !event.getMessageAuthor().asUser().get().isYourself()) {
                 String[] message = parseArgsArray(event.getMessageContent());
                 if (message.length >= 2 && message[0].equals(prefix)) {
-                    if (message[1].equals("whitelist"))
+                    if (Utils.hasPermission(event.getMessageAuthor().asUser().get(),event.getServer().get(),PermissionType.MANAGE_MESSAGES)&&message[1].equals("whitelist")){
                         switch (event.getMessageContent().toLowerCase().substring((prefix + " whitelist ").length())) {
                             case "toggle":
                                 whitelist = !whitelist;
@@ -62,7 +61,7 @@ public abstract class Module {
                                 break;
 
                         }
-                    else {
+                    }else {
 
                         long channelId = event.getChannel().getId();
                         if (whiteListChannels.contains(channelId) || !whitelist) {

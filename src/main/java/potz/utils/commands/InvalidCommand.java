@@ -6,6 +6,11 @@ import org.javacord.api.entity.user.User;
 
 public class InvalidCommand extends SimpleCommand {
     private final String errorMessage="Invalid Command!\nMake sure you spelled the command right!";
+
+    public InvalidCommand(String identifier) {
+        super(identifier);
+    }
+
     @Override
     public void execute(User sender, TextChannel c, Server s, String[] args) {
     c.sendMessage(errorMessage);
@@ -15,8 +20,4 @@ public class InvalidCommand extends SimpleCommand {
         c.sendMessage(errorMessage);
     }
 
-    @Override
-    public String getIdentifier() {
-        return null;
-    }
 }
