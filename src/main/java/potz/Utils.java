@@ -20,6 +20,8 @@ public class Utils {
             return untrimmed.substring(2, untrimmed.length() - 1);
          } else if (untrimmed.startsWith("<#") && untrimmed.endsWith(">")) {
             return untrimmed.substring(2, untrimmed.length() - 1);
+         } else if (untrimmed.startsWith("<&") && untrimmed.endsWith(">")) {
+            return untrimmed.substring(2, untrimmed.length() - 1);
         } else {
             return untrimmed;
         }
@@ -53,8 +55,18 @@ public class Utils {
     }
 
     public static boolean hasPermission(User sender, Server s, PermissionType type){
+        if(sender==null)
+            return false;
         List<Role> roles= sender.getRoles(s);
         return roles.get(roles.size()-1).getAllowedPermissions().contains(type);
+    }
+
+    public static boolean hasRole(User sender, Server s, long RoleId){
+        for (Role current:sender.getRoles(s)) {
+            if(current.getId()==RoleId)
+                return true;
+        }
+        return false;
     }
 
 }
