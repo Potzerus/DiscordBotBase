@@ -3,7 +3,6 @@ package potz.utils.database;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class State implements Serializable {

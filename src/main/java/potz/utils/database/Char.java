@@ -1,39 +1,40 @@
 package potz.utils.database;
 
-import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class Char {
 
     private ServerStorage parent;
+    private String name;
     private Long userId;
-    private HashMap<String, Capsule> stats = new HashMap<>();
+    private HashMap<String,Object > stats = new HashMap<>();
 
+
+    Char(long userId, String name, ServerStorage parent) {
+        this.userId = userId;
+        this.name = name;
+        this.parent = parent;
+        System.out.println("Created Char: " + name + " for: " + userId);
+    }
 
     Char(long userId, ServerStorage parent) {
-        this.parent = parent;
-        this.userId = userId;
-        System.out.println("Created Char for: " + userId);
+        this(userId, null, parent);
     }
-
+/*
     Char(JSONObject player, ServerStorage parent) {
-        this.parent=parent;
-        userId=player.getLong("userId");
-        JSONObject stats=player.getJSONObject("stats");
-        Iterator stat=stats.keys();
-        while(stat.hasNext()){
-            String key=stat.next().toString();
-            setStat(key,stats.getString(key));
+        this.parent = parent;
+        userId = player.getLong("userId");
+        JSONObject stats = player.getJSONObject("stats");
+        Iterator stat = stats.keys();
+        while (stat.hasNext()) {
+            String key = stat.next().toString();
+            setStat(key, stats.getString(key));
         }
     }
+*/
 
-    public String check() {
-           return this.toString();
-        }
-
-
+    /*
     public JSONObject toJson() {
         JSONObject user = new JSONObject();
         user.put("userId", userId);
@@ -46,10 +47,10 @@ public class Char {
         System.out.println(user);
         return user;
     }
-
-    public boolean addStat(String name, Object value){
-        if(stats.containsKey(name)){
-            stats.put(name,new Capsule<>(value));
+    */
+    public boolean addStat(String name, Object value) {
+        if (!stats.containsKey(name)) {
+            stats.put(name, value);
             return true;
         }
         return false;
@@ -57,9 +58,9 @@ public class Char {
 
     public void setStat(String name, Object value) {
         if (stats.containsKey(name)) {
-            stats.replace(name, new Capsule<>(value));
+            stats.replace(name, value);
         } else {
-            stats.put(name,new Capsule<>(value));
+            stats.put(name, value);
         }
     }
 
@@ -69,20 +70,37 @@ public class Char {
 
     public String toString() {
         StringBuilder output = new StringBuilder();
+        if (name != null) {
+            output.append("Name: ");
+            output.append(name);
+            output.append('\n');
+        }
+        for (String key:stats.keySet()) {
+            System.out.println(key);
+        }
         if (stats.isEmpty()) {
-            return "No Stats to display";
+            output.append("No Stats to display");
         } else {
-            Iterator<String> keys = stats.keySet().iterator();
-            //Iterator<String> values = stats.values().iterator();
-            //while (keys.hasNext()) {
-            //    output.append(keys.next() + ": " + values.next() + '\n');
-            //}
+            for (String key : stats.keySet()) {
+                output.append(key + ": " + getStat(key));
+            }
         }
         return output.toString();
     }
 
-    public Object getStat(String name){
+    public Object getStat(String name) {
         return stats.get(name);
     }
 
+    public boolean hasStat(String name) {
+        return stats.containsKey(name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
