@@ -8,7 +8,7 @@ public class Char {
     private ServerStorage parent;
     private String name;
     private Long userId;
-    private HashMap<String,Object > stats = new HashMap<>();
+    private HashMap<String,Object> stats = new HashMap<>();
 
 
     Char(long userId, String name, ServerStorage parent) {
