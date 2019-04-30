@@ -1,8 +1,6 @@
 package potz.utils.database;
 
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import potz.utils.Module;
 
 import java.util.*;
@@ -10,20 +8,20 @@ import java.util.*;
 public class ServerStorage {
 
     private HashMap<Long, Char> players = new HashMap<>();
-    private Map<String, Capsule> properties = new HashMap<>();
+    private Map<String, Object> properties = new HashMap<>();
     private String serverName;
     private long serverId;
+    private State parent;
     private List<Module> activeGames = new ArrayList<>();
 
-
-    public ServerStorage() {
-    }
-
-    public ServerStorage(Long serverId) {
+    public ServerStorage(Long serverId, State parent) {
         this.serverId = serverId;
+        this.parent = parent;
+
 
     }
 
+    /*
     public ServerStorage(JSONObject serverObject) {
         serverId = serverObject.getLong("serverId");
         if (serverObject.has("serverName"))
@@ -40,25 +38,35 @@ public class ServerStorage {
             addPlayer(player);
         }
     }
-
-    public boolean addPlayer(long userId) {
-        if (!players.containsKey(userId)) {
-            players.put(userId, new Char(userId, this));
-            return true;
-        } else return false;
+*/
+    public Char addPlayer(long userId) {
+        return addPlayer(null, userId);
     }
 
+    public Char addPlayer(String name, long userId) {
+        if (!players.containsKey(userId)) {
+            players.put(userId, new Char(userId, name, this));
+            return players.get(userId);
+        } else return null;
+    }
+/*
     public void addPlayer(JSONObject player) {
         players.put(player.getLong("userId"), new Char(player, this));
     }
-
+*/
 
     public void removePlayer(long playerId) {
         players.remove((playerId));
     }
 
     public Char getPlayer(long playerId) {
-        return players.getOrDefault(playerId, null);
+        return players.get(playerId);
+    }
+
+    public Char getOrAddPlayer(long playerId) {
+        if (!players.containsKey(playerId))
+            players.put(playerId, new Char(playerId, this));
+        return players.get(playerId);
     }
 
     public String getServerName() {
@@ -66,13 +74,13 @@ public class ServerStorage {
     }
 
     public void addProperty(String propertyName, Object propertyValue) {
-        if(properties.keySet().contains(propertyName))
-        properties.remove(propertyName);
-        properties.put(propertyName, new Capsule<>(propertyValue));
+        if (properties.keySet().contains(propertyName))
+            properties.remove(propertyName);
+        properties.put(propertyName, propertyValue);
     }
 
     public Object getProperty(String propertyName) {
-        return properties.get(propertyName).getValue();
+        return properties.get(propertyName);
     }
 
     public void removeProperty(String propertyName) {
@@ -96,6 +104,14 @@ public class ServerStorage {
         return serverName + ": " + serverId;
     }
 
+    public State getParent() {
+        return parent;
+    }
+
+    public long getServerId() {
+        return serverId;
+    }
+    /*
     public JSONObject toJson() {
         JSONObject server = new JSONObject();
         JSONArray users = new JSONArray();
@@ -109,5 +125,7 @@ public class ServerStorage {
         server.put("serverId", serverId);
         server.put("users", users);
         return server;
+
     }
+    */
 }

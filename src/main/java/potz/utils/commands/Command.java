@@ -3,10 +3,11 @@ package potz.utils.commands;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
+import potz.utils.commandMaps.CommandMap;
 import potz.utils.database.ServerStorage;
 
 public abstract class Command {
-    protected ServerStorage serverStorage;
+    protected CommandMap commandMap;
     private String identifier;
 
     public Command(String identifier){
@@ -19,8 +20,8 @@ public abstract class Command {
         return identifier;
     }
 
-    public void setServerStorage(ServerStorage serverStorage){
-        this.serverStorage=serverStorage;
+    public void setCommandMap(CommandMap commandMap){
+        this.commandMap =commandMap;
     }
 
 

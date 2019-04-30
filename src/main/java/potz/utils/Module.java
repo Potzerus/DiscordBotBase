@@ -24,7 +24,7 @@ public abstract class Module {
     protected long serverId;
     protected boolean whitelist = false;
     protected List<Long> whiteListChannels = new ArrayList<>();
-    protected CommandMap commandMap;
+    protected DefaultCommandMap commandMap;
     protected State state;
     protected String prefix;
 
@@ -39,7 +39,7 @@ public abstract class Module {
             if (event.getServer().isPresent() && event.getServer().get().getId() == serverId && !event.getMessageAuthor().isWebhook() && !event.getMessageAuthor().asUser().get().isYourself()) {
                 String[] message = parseArgsArray(event.getMessageContent());
                 if (message.length >= 2 && message[0].equals(prefix)) {
-                    if (Utils.hasPermission(event.getMessageAuthor().asUser().get(),event.getServer().get(),PermissionType.MANAGE_MESSAGES)&&message[1].equals("whitelist")){
+                    if (Utils.hasPermission(event.getMessageAuthor().asUser().get(), event.getServer().get(), PermissionType.MANAGE_MESSAGES) && message[1].equals("whitelist")) {
                         switch (event.getMessageContent().toLowerCase().substring((prefix + " whitelist ").length())) {
                             case "toggle":
                                 whitelist = !whitelist;
@@ -61,7 +61,7 @@ public abstract class Module {
                                 break;
 
                         }
-                    }else {
+                    } else {
 
                         long channelId = event.getChannel().getId();
                         if (whiteListChannels.contains(channelId) || !whitelist) {
@@ -79,7 +79,7 @@ public abstract class Module {
 
     public void runCommand(MessageCreateEvent event) {
         String[] args = parseArgsArray(event.getMessageContent());
-        System.out.println("Querying command "+args[1]);
+        System.out.println("Querying command " + args[1]);
         commandMap.getCommand(args[1]).execute(event.getMessageAuthor().asUser().get(), event.getChannel(), event.getServer().get(), args);
 
 
@@ -87,5 +87,18 @@ public abstract class Module {
 
     public abstract String getIdentifier();
 
+    public void reloadState(){
+        state=state.loadFile();
+        commandMap.setServerStorage(state);
+    }
+
+    @Override
+    public String toString() {
+        String output =
+                "Server: " + server.getName() + " " +
+                        "Prefix: " + prefix + " " +
+                        commandMap.toString();
+        return output;
+    }
 }
 

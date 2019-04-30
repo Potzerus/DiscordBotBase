@@ -1,12 +1,11 @@
 package potz.utils.commandMaps;
 
-import org.javacord.api.entity.server.Server;
 import potz.utils.commands.Command;
 import potz.utils.commands.InvalidCommand;
 import potz.utils.database.ServerStorage;
+import potz.utils.database.State;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class DefaultCommandMap implements CommandMap {
     private HashMap<String, Command> cmds = new HashMap<>();
@@ -17,8 +16,18 @@ public class DefaultCommandMap implements CommandMap {
     }
 
     @Override
+    public void setServerStorage(State parent){
+        parent.getServer(serverStorage.getServerId());
+    }
+
+    @Override
+    public ServerStorage getServerStorage() {
+        return serverStorage;
+    }
+
+    @Override
     public void register(Command cmd) {
-        cmd.setServerStorage(serverStorage);
+        cmd.setCommandMap(this);
         cmds.put(cmd.getIdentifier(),cmd);
     }
 
@@ -55,5 +64,16 @@ public class DefaultCommandMap implements CommandMap {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        String output="Commands:";
+
+        for (String key:cmds.keySet()) {
+                output+="\n\t"+key;
+        }
+
+        return output;
     }
 }
