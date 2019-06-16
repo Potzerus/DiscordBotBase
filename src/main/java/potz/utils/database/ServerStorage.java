@@ -14,6 +14,7 @@ public class ServerStorage implements Serializable {
     private long serverId;
     private State parent;
     private List<Module> activeGames = new ArrayList<>();
+    private HashMap<String, ModuleStorage> moduleStorages = new HashMap<>();
 
     public ServerStorage(Long serverId, State parent) {
         this.serverId = serverId;
@@ -98,6 +99,15 @@ public class ServerStorage implements Serializable {
                 return true;
         }
         return false;
+    }
+
+    public ModuleStorage getStorage(Module mod){
+        ModuleStorage output=moduleStorages.get(mod.getIdentifier());
+        if(output==null){
+            output=mod.genStorage();
+            moduleStorages.put(mod.getIdentifier(),output);
+        }
+        return output;
     }
 
     @Override

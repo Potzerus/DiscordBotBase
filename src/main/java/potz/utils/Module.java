@@ -6,6 +6,7 @@ import org.javacord.api.util.event.ListenerManager;
 import potz.utils.commandMaps.CommandMap;
 import potz.utils.commandMaps.DefaultCommandMap;
 import potz.Utils;
+import potz.utils.database.ModuleStorage;
 import potz.utils.database.ServerStorage;
 import potz.utils.database.State;
 import org.javacord.api.DiscordApi;
@@ -100,5 +101,7 @@ public abstract class Module {
                         commandMap.toString();
         return output;
     }
+
+    public abstract ModuleStorage genStorage();
 }
 
