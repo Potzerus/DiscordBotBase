@@ -3,9 +3,10 @@ package potz.utils.database;
 
 import potz.utils.Module;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class ServerStorage {
+public class ServerStorage implements Serializable {
 
     private HashMap<Long, Char> players = new HashMap<>();
     private Map<String, Object> properties = new HashMap<>();

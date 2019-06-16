@@ -1,5 +1,6 @@
 package potz.utils.commandMaps;
 
+import potz.utils.Module;
 import potz.utils.commands.Command;
 import potz.utils.commands.InvalidCommand;
 import potz.utils.database.ServerStorage;
@@ -10,8 +11,10 @@ import java.util.HashMap;
 public class DefaultCommandMap implements CommandMap {
     private HashMap<String, Command> cmds = new HashMap<>();
     private ServerStorage serverStorage;
+    private Module module;
 
-    public DefaultCommandMap(ServerStorage serverStorage){
+    public DefaultCommandMap(Module module,ServerStorage serverStorage){
+        this.module=module;
         this.serverStorage=serverStorage;
     }
 
@@ -64,6 +67,11 @@ public class DefaultCommandMap implements CommandMap {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public Module getModule(){
+        return module;
     }
 
     @Override

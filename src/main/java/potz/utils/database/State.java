@@ -22,7 +22,7 @@ public class State implements Serializable {
             outputList.append(serverStorage.getServerName() + ", ");
         }
 
-        return "Servers={" + outputList.toString().substring(0, outputList.toString().length() - 2) + "}";
+        return "Servers={" + outputList.toString().substring(0, outputList.toString().length()<2?0:outputList.toString().length() - 2) + "}";
     }
 
     public ServerStorage addServer(long serverId) {

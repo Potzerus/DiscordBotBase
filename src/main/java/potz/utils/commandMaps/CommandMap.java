@@ -1,5 +1,6 @@
 package potz.utils.commandMaps;
 
+import potz.utils.Module;
 import potz.utils.commands.Command;
 import potz.utils.database.ServerStorage;
 import potz.utils.database.State;
@@ -20,5 +21,7 @@ public interface CommandMap {
     void setServerStorage(State parent);
 
     ServerStorage getServerStorage();
+
+    Module getModule();
     
 }

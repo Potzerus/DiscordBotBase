@@ -33,7 +33,7 @@ public abstract class Module {
         this.serverId = server.getId();
         this.api = api;
         this.state = state;
-        this.commandMap = new DefaultCommandMap(state.getServer(server.getId()));
+        this.commandMap = new DefaultCommandMap(this,state.getServer(server.getId()));
         this.prefix = prefix;
         api.addMessageCreateListener(event -> {
             if (event.getServer().isPresent() && event.getServer().get().getId() == serverId && !event.getMessageAuthor().isWebhook() && !event.getMessageAuthor().asUser().get().isYourself()) {

@@ -1,9 +1,10 @@
 package potz.utils.database;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Char {
+public class Char implements Serializable {
 
     private ServerStorage parent;
     private String name;
