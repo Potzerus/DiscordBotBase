@@ -1,8 +1,12 @@
 package potz.utils.database;
 
 
+import potz.Link;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Char implements Serializable {
 
@@ -10,6 +14,8 @@ public class Char implements Serializable {
     private String name;
     private Long userId;
     private HashMap<String,Object> stats = new HashMap<>();
+    //private ModuleStorage moduleStorage;
+    private List<Link> links=new ArrayList<>();
 
 
     Char(long userId, String name, ServerStorage parent) {
@@ -19,36 +25,16 @@ public class Char implements Serializable {
         System.out.println("Created Char: " + name + " for: " + userId);
     }
 
+    public Char(long userId, ModuleStorage moduleStorage){
+        this.userId = userId;
+        this.name = name;
+        //this.moduleStorage=moduleStorage;
+    }
+
     Char(long userId, ServerStorage parent) {
         this(userId, null, parent);
     }
-/*
-    Char(JSONObject player, ServerStorage parent) {
-        this.parent = parent;
-        userId = player.getLong("userId");
-        JSONObject stats = player.getJSONObject("stats");
-        Iterator stat = stats.keys();
-        while (stat.hasNext()) {
-            String key = stat.next().toString();
-            setStat(key, stats.getString(key));
-        }
-    }
-*/
 
-    /*
-    public JSONObject toJson() {
-        JSONObject user = new JSONObject();
-        user.put("userId", userId);
-        JSONObject stats=new JSONObject();
-        Iterator<String> keys = stats.keySet().iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            user.put(key, stats.get(key));
-        }
-        System.out.println(user);
-        return user;
-    }
-    */
     public boolean addStat(String name, Object value) {
         if (!stats.containsKey(name)) {
             stats.put(name, value);

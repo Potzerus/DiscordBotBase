@@ -28,6 +28,7 @@ public abstract class Module {
     protected DefaultCommandMap commandMap;
     protected State state;
     protected String prefix;
+    protected ModuleStorage moduleStorage=genStorage();
 
     public Module(String prefix, DiscordApi api, Server server, State state) {
         this.server = server;
