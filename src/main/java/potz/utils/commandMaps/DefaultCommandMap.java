@@ -3,6 +3,7 @@ package potz.utils.commandMaps;
 import potz.utils.Module;
 import potz.utils.commands.Command;
 import potz.utils.commands.InvalidCommand;
+import potz.utils.database.ModuleStorage;
 import potz.utils.database.ServerStorage;
 import potz.utils.database.State;
 
@@ -11,6 +12,7 @@ import java.util.HashMap;
 public class DefaultCommandMap implements CommandMap {
     private HashMap<String, Command> cmds = new HashMap<>();
     private ServerStorage serverStorage;
+    private ModuleStorage moduleStorage;
     private Module module;
 
     public DefaultCommandMap(Module module,ServerStorage serverStorage){

@@ -23,24 +23,6 @@ public class ServerStorage implements Serializable {
 
     }
 
-    /*
-    public ServerStorage(JSONObject serverObject) {
-        serverId = serverObject.getLong("serverId");
-        if (serverObject.has("serverName"))
-            serverName = serverObject.getString("serverName");
-        JSONObject properties = serverObject.getJSONObject("properties");
-        Iterator propertyIterator = properties.keys();
-        while (propertyIterator.hasNext()) {
-            String key = propertyIterator.next().toString();
-            addProperty(key, properties.getString(key));
-        }
-        JSONArray players = serverObject.getJSONArray("players");
-        for (int i = 0; i < players.length(); i++) {
-            JSONObject player = (JSONObject) players.get(i);
-            addPlayer(player);
-        }
-    }
-*/
     public Char addPlayer(long userId) {
         return addPlayer(null, userId);
     }
@@ -51,11 +33,7 @@ public class ServerStorage implements Serializable {
             return players.get(userId);
         } else return null;
     }
-/*
-    public void addPlayer(JSONObject player) {
-        players.put(player.getLong("userId"), new Char(player, this));
-    }
-*/
+
 
     public void removePlayer(long playerId) {
         players.remove((playerId));
@@ -75,12 +53,14 @@ public class ServerStorage implements Serializable {
         return serverName;
     }
 
+    //Replace Property with ModuleStorage Asap
     public void addProperty(String propertyName, Object propertyValue) {
         if (properties.keySet().contains(propertyName))
             properties.remove(propertyName);
         properties.put(propertyName, propertyValue);
     }
 
+    //Replace Property with ModuleStorage Asap
     public Object getProperty(String propertyName) {
         return properties.get(propertyName);
     }
@@ -101,7 +81,7 @@ public class ServerStorage implements Serializable {
         return false;
     }
 
-    public ModuleStorage getStorage(Module mod){
+    public ModuleStorage getModuleStorage(Module mod){
         ModuleStorage output=moduleStorages.get(mod.getIdentifier());
         if(output==null){
             output=mod.genStorage();
@@ -122,21 +102,5 @@ public class ServerStorage implements Serializable {
     public long getServerId() {
         return serverId;
     }
-    /*
-    public JSONObject toJson() {
-        JSONObject server = new JSONObject();
-        JSONArray users = new JSONArray();
-        Iterator i = this.players.keySet().iterator();
-        int count = 0;
-        while (i.hasNext()) {
-            Long key = (Long) i.next();
-            users.put(count, this.players.get(key).toJson());
-            count++;
-        }
-        server.put("serverId", serverId);
-        server.put("users", users);
-        return server;
 
-    }
-    */
 }
