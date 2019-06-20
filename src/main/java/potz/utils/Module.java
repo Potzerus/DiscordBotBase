@@ -1,9 +1,6 @@
 package potz.utils;
 
 import org.javacord.api.entity.permission.PermissionType;
-import org.javacord.api.listener.message.MessageCreateListener;
-import org.javacord.api.util.event.ListenerManager;
-import potz.utils.commandMaps.CommandMap;
 import potz.utils.commandMaps.DefaultCommandMap;
 import potz.Utils;
 import potz.utils.database.ModuleStorage;
@@ -28,7 +25,8 @@ public abstract class Module {
     protected DefaultCommandMap commandMap;
     protected State state;
     protected String prefix;
-    protected ModuleStorage moduleStorage=genStorage();
+    protected String identifier;
+    protected ModuleStorage moduleStorage;
 
     public Module(String prefix, DiscordApi api, Server server, State state) {
         this.server = server;
@@ -37,37 +35,15 @@ public abstract class Module {
         this.state = state;
         this.commandMap = new DefaultCommandMap(this,state.getServer(server.getId()));
         this.prefix = prefix;
+        this.moduleStorage = genStorage(state.getServer(serverId));
         api.addMessageCreateListener(event -> {
             if (event.getServer().isPresent() && event.getServer().get().getId() == serverId && !event.getMessageAuthor().isWebhook() && !event.getMessageAuthor().asUser().get().isYourself()) {
                 String[] message = parseArgsArray(event.getMessageContent());
                 if (message.length >= 2 && message[0].equals(prefix)) {
-                    if (Utils.hasPermission(event.getMessageAuthor().asUser().get(), event.getServer().get(), PermissionType.MANAGE_MESSAGES) && message[1].equals("whitelist")) {
-                        switch (event.getMessageContent().toLowerCase().substring((prefix + " whitelist ").length())) {
-                            case "toggle":
-                                whitelist = !whitelist;
-                                event.getChannel().sendMessage("Whitelist is now " + (whitelist ? "enabled" : "disabled"));
-                                break;
-                            case "on":
-                                whitelist = true;
-                                break;
-                            case "off":
-                                whitelist = false;
-                                break;
-                            case "add":
-                                whiteListChannels.add(event.getChannel().getId());
-                                event.getChannel().sendMessage("Added this Channel to the whitelist!");
-                                break;
-                            case "remove":
-                                whiteListChannels.remove(event.getChannel().getId());
-                                event.getChannel().sendMessage("Removed this Channel from the whitelist!");
-                                break;
-
-                        }
-                    } else {
-
+                    if (!isWhitelistCommand(prefix,message, event)) {
                         long channelId = event.getChannel().getId();
                         if (whiteListChannels.contains(channelId) || !whitelist) {
-                            commandMap.getCommand(message[1]).execute(event.getMessageAuthor().asUser().get(), event.getChannel(), event.getServer().get(), message);
+                            commandMap.getCommand(message[1]).execute(event, message);
 
                         }
 
@@ -79,15 +55,48 @@ public abstract class Module {
 
     }
 
+    private boolean isWhitelistCommand(String prefix,String[] message, MessageCreateEvent event) {
+        if(!Utils.hasPermission(event.getMessageAuthor().asUser().get(), event.getServer().get(), PermissionType.MANAGE_MESSAGES) && message[1].equals("whitelist"))
+            return false;
+        switch (event.getMessageContent().toLowerCase().substring((prefix + " whitelist ").length())) {
+            case "toggle":
+                whitelist = !whitelist;
+                event.getChannel().sendMessage("Whitelist is now " + (whitelist ? "enabled" : "disabled"));
+                break;
+            case "on":
+                whitelist = true;
+                break;
+            case "off":
+                whitelist = false;
+                break;
+            case "add":
+                whiteListChannels.add(event.getChannel().getId());
+                event.getChannel().sendMessage("Added this Channel to the whitelist!");
+                break;
+            case "remove":
+                whiteListChannels.remove(event.getChannel().getId());
+                event.getChannel().sendMessage("Removed this Channel from the whitelist!");
+                break;
+
+        }
+        return true;
+    }
+
     public void runCommand(MessageCreateEvent event) {
         String[] args = parseArgsArray(event.getMessageContent());
         System.out.println("Querying command " + args[1]);
-        commandMap.getCommand(args[1]).execute(event.getMessageAuthor().asUser().get(), event.getChannel(), event.getServer().get(), args);
+        commandMap.getCommand(args[1]).execute(event, args);
 
 
     }
 
-    public abstract String getIdentifier();
+    public String getIdentifier(){
+        return identifier;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
 
     public void reloadState(){
         state=state.loadFile();
@@ -96,13 +105,11 @@ public abstract class Module {
 
     @Override
     public String toString() {
-        String output =
-                "Server: " + server.getName() + " " +
-                        "Prefix: " + prefix + " " +
-                        commandMap.toString();
-        return output;
+        return "Server: " + server.getName() + " " +
+                "Prefix: " + prefix + " " +
+                commandMap.toString();
     }
 
-    public abstract ModuleStorage genStorage();
+    public abstract ModuleStorage genStorage(ServerStorage serverStorage);
 }
 

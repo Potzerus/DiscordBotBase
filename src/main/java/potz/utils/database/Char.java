@@ -31,7 +31,7 @@ public class Char implements Serializable {
         //this.moduleStorage=moduleStorage;
     }
 
-    Char(long userId, ServerStorage parent) {
+    public Char(long userId, ServerStorage parent) {
         this(userId, null, parent);
     }
 

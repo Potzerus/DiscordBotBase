@@ -12,7 +12,7 @@ public class InvalidCommand extends SimpleCommand {
     }
 
     @Override
-    public void execute(User sender, TextChannel c, Server s, String[] args) {
+    public void execute(User sender, Server s, TextChannel c, String[] args) {
     c.sendMessage(errorMessage);
     }
 
