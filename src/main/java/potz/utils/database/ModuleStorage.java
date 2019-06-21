@@ -2,12 +2,13 @@ package potz.utils.database;
 
 import java.util.HashMap;
 
-public abstract class ModuleStorage<Map> {
-    protected HashMap<Long,Char> players;
-    protected Map map;
+public abstract class ModuleStorage<CharType/*,Map*/> {
+    protected HashMap<Long,CharType> players;
+    //Potential Maps in the future, not yet though
+    //protected Map map;
 
-    public ModuleStorage(Map map,boolean loadPlayers) {
-        this.map = map;
+    public ModuleStorage(/*Map map,*/boolean loadPlayers) {
+        //this.map = map;
         if(loadPlayers)
             load();
         else
@@ -16,20 +17,20 @@ public abstract class ModuleStorage<Map> {
 
     protected abstract void load();
 
-    public HashMap<Long, Char> getPlayers() {
+    public HashMap<Long, CharType> getPlayers() {
         return players;
     }
 
-    public Map getMap() {
+/*    public Map getMap() {
         return map;
-    }
+    }*/
 
-    public Char getPlayer(long id){
+    public CharType getPlayer(long id){
         if(!players.containsKey(id))
             players.put(id,genChar(id));
         return players.get(id);
 
     }
 
-    protected abstract Char genChar(long id);
+    protected abstract CharType genChar(long id);
 }

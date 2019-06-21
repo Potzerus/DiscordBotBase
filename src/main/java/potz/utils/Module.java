@@ -4,7 +4,6 @@ import org.javacord.api.entity.permission.PermissionType;
 import potz.utils.commandMaps.DefaultCommandMap;
 import potz.Utils;
 import potz.utils.database.ModuleStorage;
-import potz.utils.database.ServerStorage;
 import potz.utils.database.State;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.server.Server;
@@ -35,7 +34,7 @@ public abstract class Module {
         this.state = state;
         this.commandMap = new DefaultCommandMap(this,state.getServer(server.getId()));
         this.prefix = prefix;
-        this.moduleStorage = genStorage(state.getServer(serverId));
+        this.moduleStorage = genStorage();
         api.addMessageCreateListener(event -> {
             if (event.getServer().isPresent() && event.getServer().get().getId() == serverId && !event.getMessageAuthor().isWebhook() && !event.getMessageAuthor().asUser().get().isYourself()) {
                 String[] message = parseArgsArray(event.getMessageContent());
@@ -110,6 +109,6 @@ public abstract class Module {
                 commandMap.toString();
     }
 
-    public abstract ModuleStorage genStorage(ServerStorage serverStorage);
+    public abstract ModuleStorage genStorage();
 }
 

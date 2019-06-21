@@ -10,12 +10,12 @@ import java.util.List;
 
 public class Char implements Serializable {
 
-    private ServerStorage parent;
-    private String name;
-    private Long userId;
-    private HashMap<String,Object> stats = new HashMap<>();
-    //private ModuleStorage moduleStorage;
-    private List<Link> links=new ArrayList<>();
+    protected ServerStorage parent;
+    protected String name;
+    protected Long userId;
+    protected HashMap<String,Object> stats = new HashMap<>();
+    protected ModuleStorage moduleStorage;
+    protected List<Link> links=new ArrayList<>();
 
 
     Char(long userId, String name, ServerStorage parent) {
