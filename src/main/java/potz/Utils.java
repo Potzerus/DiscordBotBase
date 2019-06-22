@@ -57,8 +57,13 @@ public class Utils {
     public static boolean hasPermission(User sender, Server s, PermissionType type){
         if(sender==null)
             return false;
+
         List<Role> roles= sender.getRoles(s);
-        return roles.get(roles.size()-1).getAllowedPermissions().contains(type);
+        for (Role role:roles) {
+            if(role.getAllowedPermissions().contains(type))
+                return true;
+        }
+        return false;
     }
 
     public static boolean hasRole(User sender, Server s, long RoleId){
