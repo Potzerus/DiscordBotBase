@@ -5,10 +5,10 @@ import java.util.HashMap;
 public abstract class ModuleStorage<CharType/*,Map*/> {
     protected HashMap<Long,CharType> players;
     //Potential Maps in the future, not yet though
-    //protected Map map;
+    //protected Map drone.map;
 
-    public ModuleStorage(/*Map map,*/boolean loadPlayers) {
-        //this.map = map;
+    public ModuleStorage(/*Map drone.map,*/boolean loadPlayers) {
+        //this.drone.map = drone.map;
         if(loadPlayers)
             load();
         else
@@ -22,7 +22,7 @@ public abstract class ModuleStorage<CharType/*,Map*/> {
     }
 
 /*    public Map getMap() {
-        return map;
+        return drone.map;
     }*/
 
     public CharType getPlayer(long id){
