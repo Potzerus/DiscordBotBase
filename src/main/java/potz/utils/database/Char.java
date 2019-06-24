@@ -90,4 +90,9 @@ public class Char implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Object getOrAddStat(String statName, Object statValue) {
+        stats.putIfAbsent(statName,statValue);
+        return stats.get(statName);
+    }
 }
