@@ -3,9 +3,10 @@ package potz.utils.database;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-public class State implements Serializable {
+public class State implements Serializable,Iterable<ServerStorage> {
 
     private Map<Long, ServerStorage> servers;
 
@@ -174,6 +175,11 @@ public class State implements Serializable {
 
     private void clearMap() {
         servers.clear();
+    }
+
+    @Override
+    public Iterator<ServerStorage> iterator() {
+        return servers.values().iterator();
     }
 }
 

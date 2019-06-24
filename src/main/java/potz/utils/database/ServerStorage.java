@@ -6,7 +6,7 @@ import potz.utils.Module;
 import java.io.Serializable;
 import java.util.*;
 
-public class ServerStorage implements Serializable {
+public class ServerStorage implements Serializable,Iterable<Char> {
 
     private HashMap<Long, Char> players = new HashMap<>();
     private Map<String, Object> properties = new HashMap<>();
@@ -103,4 +103,8 @@ public class ServerStorage implements Serializable {
         return serverId;
     }
 
+    @Override
+    public Iterator<Char> iterator() {
+        return players.values().iterator();
+    }
 }

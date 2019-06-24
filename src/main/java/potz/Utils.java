@@ -54,14 +54,16 @@ public class Utils {
 
     }
 
-    public static boolean hasPermission(User sender, Server s, PermissionType type){
+    public static boolean hasPermission(User sender, Server s, PermissionType... types){
         if(sender==null)
             return false;
 
         List<Role> roles= sender.getRoles(s);
         for (Role role:roles) {
-            if(role.getAllowedPermissions().contains(type))
-                return true;
+            for (PermissionType type:types) {
+                if(role.getAllowedPermissions().contains(type))
+                    return true;
+            }
         }
         return false;
     }
@@ -73,6 +75,8 @@ public class Utils {
         }
         return false;
     }
+
+
 
 
 }
