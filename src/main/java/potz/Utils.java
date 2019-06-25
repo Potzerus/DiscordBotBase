@@ -48,7 +48,7 @@ public class Utils {
         try {
             token = new String(Files.readAllBytes(Paths.get("Token")));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("You need to create a File called \"Token\" and put your Bot Token into it to start the bot!");
         }
         return token;
 
