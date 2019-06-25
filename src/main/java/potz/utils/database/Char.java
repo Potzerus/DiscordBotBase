@@ -96,8 +96,4 @@ public class Char implements Serializable {
         this.name = name;
     }
 
-    public Object getOrAddStat(String statName, Object statValue) {
-        stats.putIfAbsent(statName,statValue);
-        return stats.get(statName);
-    }
 }
