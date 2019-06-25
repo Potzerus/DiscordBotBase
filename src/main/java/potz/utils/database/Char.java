@@ -79,6 +79,11 @@ public class Char implements Serializable {
         return stats.get(name);
     }
 
+    public Object getOrAddStat(String name,Object value) {
+        stats.putIfAbsent(name, value);
+        return stats.get(name);
+    }
+
     public boolean hasStat(String name) {
         return stats.containsKey(name);
     }

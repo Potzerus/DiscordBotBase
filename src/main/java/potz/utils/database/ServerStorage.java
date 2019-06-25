@@ -6,7 +6,7 @@ import potz.utils.Module;
 import java.io.Serializable;
 import java.util.*;
 
-public class ServerStorage implements Serializable {
+public class ServerStorage implements Serializable,Iterable<Char> {
 
     private HashMap<Long, Char> players = new HashMap<>();
     private Map<String, Object> properties = new HashMap<>();
@@ -14,7 +14,7 @@ public class ServerStorage implements Serializable {
     private long serverId;
     private State parent;
     private List<Module> activeGames = new ArrayList<>();
-    private HashMap<String, ModuleStorage> moduleStorages = new HashMap<>();
+    private HashMap<Module, ModuleStorage> moduleStorages = new HashMap<>();
 
     public ServerStorage(Long serverId, State parent) {
         this.serverId = serverId;
@@ -82,10 +82,10 @@ public class ServerStorage implements Serializable {
     }
 
     public ModuleStorage getModuleStorage(Module mod){
-        ModuleStorage output=moduleStorages.get(mod.getIdentifier());
+        ModuleStorage output=moduleStorages.get(mod);
         if(output==null){
             output=mod.genStorage();
-            moduleStorages.put(mod.getIdentifier(),output);
+            moduleStorages.put(mod,output);
         }
         return output;
     }
@@ -103,4 +103,8 @@ public class ServerStorage implements Serializable {
         return serverId;
     }
 
+    @Override
+    public Iterator<Char> iterator() {
+        return players.values().iterator();
+    }
 }

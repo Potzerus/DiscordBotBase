@@ -24,7 +24,6 @@ public abstract class Module {
     protected DefaultCommandMap commandMap;
     protected State state;
     protected String prefix;
-    protected String identifier;
     protected ModuleStorage moduleStorage;
 
     public Module(String prefix, DiscordApi api, Server server, State state) {
@@ -37,7 +36,7 @@ public abstract class Module {
         this.moduleStorage = genStorage();
         api.addMessageCreateListener(event -> {
             if (event.getServer().isPresent() && event.getServer().get().getId() == serverId && !event.getMessageAuthor().isWebhook() && !event.getMessageAuthor().asUser().get().isYourself()) {
-                String[] message = parseArgsArray(event.getMessageContent());
+                String[] message = event.getMessageContent().split(" ");
                 if (message.length >= 2 && message[0].equals(prefix)) {
                     if (!isWhitelistCommand(prefix,message, event)) {
                         long channelId = event.getChannel().getId();
@@ -55,7 +54,7 @@ public abstract class Module {
     }
 
     private boolean isWhitelistCommand(String prefix,String[] message, MessageCreateEvent event) {
-        if(!Utils.hasPermission(event.getMessageAuthor().asUser().get(), event.getServer().get(), PermissionType.MANAGE_MESSAGES) && message[1].equals("whitelist"))
+        if(!(Utils.hasPermission(event.getMessageAuthor().asUser().get(), event.getServer().get(), PermissionType.MANAGE_MESSAGES) && message[1].equals("whitelist")))
             return false;
         switch (event.getMessageContent().toLowerCase().substring((prefix + " whitelist ").length())) {
             case "toggle":
@@ -89,9 +88,7 @@ public abstract class Module {
 
     }
 
-    public String getIdentifier(){
-        return identifier;
-    }
+    public abstract String getIdentifier();
 
     public String getPrefix() {
         return prefix;
