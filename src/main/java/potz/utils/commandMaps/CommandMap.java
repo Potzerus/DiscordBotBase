@@ -5,7 +5,7 @@ import potz.utils.commands.Command;
 import potz.utils.database.ServerStorage;
 import potz.utils.database.State;
 
-public interface CommandMap {
+public interface CommandMap extends Iterable<Command> {
     void register(Command cmd);
 
     Command getCommand(String cmdString);

@@ -8,6 +8,7 @@ import potz.utils.database.ServerStorage;
 import potz.utils.database.State;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class DefaultCommandMap implements CommandMap {
     private HashMap<String, Command> cmds = new HashMap<>();
@@ -86,4 +87,10 @@ public class DefaultCommandMap implements CommandMap {
 
         return output;
     }
+
+    @Override
+    public Iterator<Command> iterator() {
+        return cmds.values().iterator();
+    }
+
 }
