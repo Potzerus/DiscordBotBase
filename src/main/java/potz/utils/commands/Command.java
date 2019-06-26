@@ -8,10 +8,17 @@ import potz.utils.commandMaps.CommandMap;
 
 public abstract class Command {
     protected CommandMap commandMap;
-    private String identifier;
+    protected final String identifier;
+    protected final String description;
 
     public Command(String identifier){
         this.identifier=identifier;
+        description="Default Description";
+    }
+
+    public Command(String identifier,String description){
+        this.identifier=identifier;
+        this.description=description;
     }
 
     public void execute(MessageCreateEvent event, String[] args) {
@@ -23,6 +30,8 @@ public abstract class Command {
     public final String getIdentifier(){
         return identifier;
     }
+
+    public String getDescription(){return description;}
 
     public void setCommandMap(CommandMap commandMap){
         this.commandMap =commandMap;
