@@ -6,9 +6,9 @@ import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import potz.utils.commandMaps.CommandMap;
 
-public abstract class Command {
+public abstract class Command implements Comparable<Command>{
     protected CommandMap commandMap;
-    protected final String identifier;
+    protected String identifier;
     protected final String description;
 
     public Command(String identifier){
@@ -37,5 +37,13 @@ public abstract class Command {
         this.commandMap =commandMap;
     }
 
+    @Override
+    public String toString() {
+        return identifier+","+description;
+    }
 
+    @Override
+    public int compareTo(Command o) {
+        return identifier.compareTo(o.identifier);
+    }
 }
