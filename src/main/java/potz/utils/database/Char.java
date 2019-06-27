@@ -96,4 +96,12 @@ public class Char implements Serializable {
         this.name = name;
     }
 
+    public long getId(){
+        return userId;
+    }
+
+    public ServerStorage getParent(){
+        return parent;
+    }
+
 }
