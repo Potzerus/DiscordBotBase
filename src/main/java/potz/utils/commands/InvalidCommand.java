@@ -4,7 +4,7 @@ import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
-public class InvalidCommand extends SimpleCommand {
+public class InvalidCommand extends Command {
     private final String errorMessage="Invalid Command!\nMake sure you spelled the command right!";
 
     public InvalidCommand(String identifier) {
@@ -12,7 +12,7 @@ public class InvalidCommand extends SimpleCommand {
     }
 
     @Override
-    public void execute(User sender, TextChannel c, Server s, String[] args) {
+    public void execute(User sender, Server s, TextChannel c, String[] args) {
     c.sendMessage(errorMessage);
     }
 

@@ -48,17 +48,24 @@ public class Utils {
         try {
             token = new String(Files.readAllBytes(Paths.get("Token")));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("You need to create a File called \"Token\" and put your Bot Token into it to start the bot!");
         }
         return token;
 
     }
 
-    public static boolean hasPermission(User sender, Server s, PermissionType type){
+    public static boolean hasPermission(User sender, Server s, PermissionType... types){
         if(sender==null)
             return false;
+
         List<Role> roles= sender.getRoles(s);
-        return roles.get(roles.size()-1).getAllowedPermissions().contains(type);
+        for (Role role:roles) {
+            for (PermissionType type:types) {
+                if(role.getAllowedPermissions().contains(type))
+                    return true;
+            }
+        }
+        return false;
     }
 
     public static boolean hasRole(User sender, Server s, long RoleId){
@@ -68,6 +75,8 @@ public class Utils {
         }
         return false;
     }
+
+
 
 
 }
