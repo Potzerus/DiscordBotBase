@@ -1,8 +1,8 @@
-package com.github.potz;
-
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import potz.Utils;
+import potz.utils.database.ServerStorage;
+import potz.utils.database.State;
 
 public class Center {
     private static DiscordApi api;
@@ -24,10 +24,13 @@ public class Center {
                 if (event.getServer().isPresent() && event.getMessageAuthor().isBotOwner() && argus.length == 3 && argus[1].equals("enable")) {
                     long serverId = event.getServer().get().getId();
                     ServerStorage ss = state.getServer(serverId);
-                    for (Modules m : Modules.values()) {
-                        if (m.activate(ss, event, serverId, argus[2].toLowerCase()))
-                            break;
-                    }
+                    //You will need to introduce your own Code here, depending on what you want, this setup is good for
+                    //seperately activatable modules
+                    //Good Luck :)
+                    //for (Modules m : Modules.values()) {
+                    //    if (m.activate(ss, event, serverId, argus[2].toLowerCase()))
+                    //        break;
+                    //}
                 }
             }
         });
