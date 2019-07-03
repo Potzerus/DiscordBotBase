@@ -1,5 +1,6 @@
 package potz;
 
+import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
@@ -74,6 +75,10 @@ public class Utils {
                 return true;
         }
         return false;
+    }
+
+    public static User find(DiscordApi api, String id){
+        return api.getUserById(Utils.trimMention(id)).join();
     }
 
 
