@@ -81,15 +81,6 @@ public class ServerStorage implements Serializable,Iterable<Char> {
         return false;
     }
 
-    public ModuleStorage getModuleStorage(Module mod){
-        ModuleStorage output=moduleStorages.get(mod);
-        if(output==null){
-            output=mod.genStorage();
-            moduleStorages.put(mod,output);
-        }
-        return output;
-    }
-
     @Override
     public String toString() {
         return serverName + ": " + serverId;
