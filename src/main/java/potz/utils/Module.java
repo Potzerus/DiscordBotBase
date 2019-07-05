@@ -24,8 +24,8 @@ public abstract class Module {
     protected DefaultCommandMap commandMap;
     protected State state;
     protected String prefix;
-    protected ModuleStorage moduleStorage;
     protected String identifier;
+
 
     public Module(String prefix, DiscordApi api, Server server, State state) {
         this.server = server;
@@ -34,7 +34,6 @@ public abstract class Module {
         this.state = state;
         this.commandMap = new DefaultCommandMap(this, state.getServer(server.getId()));
         this.prefix = prefix;
-        this.moduleStorage = genStorage();
         api.addMessageCreateListener(event -> {
             if (event.getServer().isPresent() && event.getServer().get().getId() == serverId && !event.getMessageAuthor().isWebhook() && !event.getMessageAuthor().asUser().get().isYourself()) {
                 String[] message = event.getMessageContent().split(" ");
@@ -95,6 +94,7 @@ public abstract class Module {
 
     }
 
+
     public String getIdentifier() {
         return identifier;
     }
@@ -115,9 +115,6 @@ public abstract class Module {
                 commandMap.toString();
     }
 
-    public ModuleStorage genStorage() {
-        return null;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -128,5 +125,9 @@ public abstract class Module {
                 && m.serverId == serverId
                 && m.prefix.equals(prefix);
     }
+
+    public abstract void saveModule();
+    public abstract void loadModule();
+
 }
 
