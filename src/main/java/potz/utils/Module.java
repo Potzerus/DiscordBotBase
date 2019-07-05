@@ -24,19 +24,21 @@ public abstract class Module {
     protected DefaultCommandMap commandMap;
     protected State state;
     protected String prefix;
+    protected String identifier;
+
 
     public Module(String prefix, DiscordApi api, Server server, State state) {
         this.server = server;
         this.serverId = server.getId();
         this.api = api;
         this.state = state;
-        this.commandMap = new DefaultCommandMap(this,state.getServer(server.getId()));
+        this.commandMap = new DefaultCommandMap(this, state.getServer(server.getId()));
         this.prefix = prefix;
         api.addMessageCreateListener(event -> {
             if (event.getServer().isPresent() && event.getServer().get().getId() == serverId && !event.getMessageAuthor().isWebhook() && !event.getMessageAuthor().asUser().get().isYourself()) {
                 String[] message = event.getMessageContent().split(" ");
                 if (message.length >= 2 && message[0].equals(prefix)) {
-                    if (!isWhitelistCommand(prefix,message, event)) {
+                    if (!isWhitelistCommand(prefix, message, event)) {
                         long channelId = event.getChannel().getId();
                         if (whiteListChannels.contains(channelId) || !whitelist) {
                             commandMap.getCommand(message[1]).execute(event, message);
@@ -51,8 +53,14 @@ public abstract class Module {
 
     }
 
-    private boolean isWhitelistCommand(String prefix,String[] message, MessageCreateEvent event) {
-        if(!(Utils.hasPermission(event.getMessageAuthor().asUser().get(), event.getServer().get(), PermissionType.MANAGE_MESSAGES) && message[1].equals("whitelist")))
+    public Module(String prefix, String identifier, DiscordApi api, Server server, State state) {
+        this(prefix, api, server, state);
+        this.identifier = identifier;
+    }
+
+
+    private boolean isWhitelistCommand(String prefix, String[] message, MessageCreateEvent event) {
+        if (!(Utils.hasPermission(event.getMessageAuthor().asUser().get(), event.getServer().get(), PermissionType.MANAGE_MESSAGES) && message[1].equals("whitelist")))
             return false;
         switch (event.getMessageContent().toLowerCase().substring((prefix + " whitelist ").length())) {
             case "toggle":
@@ -86,12 +94,17 @@ public abstract class Module {
 
     }
 
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
     public String getPrefix() {
         return prefix;
     }
 
-    public void reloadState(){
-        state=state.loadFile();
+    public void reloadState() {
+        state = state.loadFile();
         commandMap.setServerStorage(state);
     }
 
@@ -102,7 +115,19 @@ public abstract class Module {
                 commandMap.toString();
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Module))
+            return false;
+        Module m = (Module) o;
+        return m.identifier.equals(identifier)
+                && m.serverId == serverId
+                && m.prefix.equals(prefix);
+    }
+
     public abstract void saveModule();
     public abstract void loadModule();
+
 }
 

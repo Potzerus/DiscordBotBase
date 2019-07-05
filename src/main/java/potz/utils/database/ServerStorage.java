@@ -6,7 +6,7 @@ import potz.utils.Module;
 import java.io.Serializable;
 import java.util.*;
 
-public class ServerStorage implements Serializable,Iterable<Char> {
+public class ServerStorage implements Serializable, Iterable<Char> {
 
     private HashMap<Long, Char> players = new HashMap<>();
     private Map<String, Object> properties = new HashMap<>();
@@ -70,7 +70,10 @@ public class ServerStorage implements Serializable,Iterable<Char> {
     }
 
     public void addModule(Module... modules) {
-        activeGames.addAll(Arrays.asList(modules));
+        for (Module m : modules) {
+            if(!activeGames.contains(m))
+            activeGames.add(m);
+        }
     }
 
     public boolean hasActiveModule(String identifier) {
@@ -80,7 +83,7 @@ public class ServerStorage implements Serializable,Iterable<Char> {
         }
         return false;
     }
-
+  
     @Override
     public String toString() {
         return serverName + ": " + serverId;
