@@ -129,5 +129,8 @@ public abstract class Module {
     public abstract void saveModule();
     public abstract void loadModule();
 
+    public  void tick(){
+
+    }
 }
 

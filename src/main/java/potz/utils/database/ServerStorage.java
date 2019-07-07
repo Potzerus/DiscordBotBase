@@ -101,4 +101,11 @@ public class ServerStorage implements Serializable, Iterable<Char> {
     public Iterator<Char> iterator() {
         return players.values().iterator();
     }
+
+    public void tick() {
+        for (Module m :
+                activeGames) {
+            m.tick();
+        }
+    }
 }

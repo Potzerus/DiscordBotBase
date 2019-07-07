@@ -122,7 +122,6 @@ public class State implements Serializable,Iterable<ServerStorage> {
             InputStream inStream = new FileInputStream("State.ser");
             ObjectInputStream fileObjectIn = new ObjectInputStream(inStream);
             State s = (State) fileObjectIn.readObject();
-            System.out.println(s);
             fileObjectIn.close();
             inStream.close();
             return s;
@@ -180,6 +179,12 @@ public class State implements Serializable,Iterable<ServerStorage> {
     @Override
     public Iterator<ServerStorage> iterator() {
         return servers.values().iterator();
+    }
+
+    public void tick(){
+        for (ServerStorage ss : servers.values()) {
+            ss.tick();
+        }
     }
 }
 
