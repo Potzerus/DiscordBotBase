@@ -1,9 +1,11 @@
 package potz.utils.database;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import potz.Link;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +15,9 @@ public class Char implements Serializable {
     protected ServerStorage parent;
     protected String name;
     protected Long userId;
-    protected HashMap<String,Object> stats = new HashMap<>();
+    protected HashMap<String, Object> properties = new HashMap<>();
     protected ModuleStorage moduleStorage;
-    protected List<Link> links=new ArrayList<>();
+    protected List<Link> links = new ArrayList<>();
 
 
     Char(long userId, String name, ServerStorage parent) {
@@ -25,7 +27,7 @@ public class Char implements Serializable {
         System.out.println("Created Char: " + name + " for: " + userId);
     }
 
-    public Char(long userId, ModuleStorage moduleStorage){
+    public Char(long userId, ModuleStorage moduleStorage) {
         this.userId = userId;
         this.name = name;
         //this.moduleStorage=moduleStorage;
@@ -35,24 +37,28 @@ public class Char implements Serializable {
         this(userId, null, parent);
     }
 
+    public Char(JSONObject jsonObject, ServerStorage parent) {
+
+    }
+
     public boolean addStat(String name, Object value) {
-        if (!stats.containsKey(name)) {
-            stats.put(name, value);
+        if (!properties.containsKey(name)) {
+            properties.put(name, value);
             return true;
         }
         return false;
     }
 
     public void setStat(String name, Object value) {
-        if (stats.containsKey(name)) {
-            stats.replace(name, value);
+        if (properties.containsKey(name)) {
+            properties.replace(name, value);
         } else {
-            stats.put(name, value);
+            properties.put(name, value);
         }
     }
 
     public void removeStat(String name) {
-        stats.remove(name);
+        properties.remove(name);
     }
 
     public String toString() {
@@ -62,13 +68,13 @@ public class Char implements Serializable {
             output.append(name);
             output.append('\n');
         }
-        for (String key:stats.keySet()) {
+        for (String key : properties.keySet()) {
             System.out.println(key);
         }
-        if (stats.isEmpty()) {
+        if (properties.isEmpty()) {
             output.append("No Stats to display");
         } else {
-            for (String key : stats.keySet()) {
+            for (String key : properties.keySet()) {
                 output.append(key + ": " + getStat(key));
             }
         }
@@ -76,16 +82,16 @@ public class Char implements Serializable {
     }
 
     public Object getStat(String name) {
-        return stats.get(name);
+        return properties.get(name);
     }
 
-    public Object getOrAddStat(String name,Object value) {
-        stats.putIfAbsent(name, value);
-        return stats.get(name);
+    public Object getOrAddStat(String name, Object value) {
+        properties.putIfAbsent(name, value);
+        return properties.get(name);
     }
 
     public boolean hasStat(String name) {
-        return stats.containsKey(name);
+        return properties.containsKey(name);
     }
 
     public String getName() {
@@ -96,12 +102,24 @@ public class Char implements Serializable {
         this.name = name;
     }
 
-    public long getId(){
+    public long getId() {
         return userId;
     }
 
-    public ServerStorage getParent(){
+    public ServerStorage getParent() {
         return parent;
     }
 
+    public JSONObject toJSON() {
+        JSONObject jObject = new JSONObject();
+        jObject.append("id", userId);
+        if (name != null)
+            jObject.append("name", name);
+        JSONObject jChild = new JSONObject();
+        jObject.append("properties", jChild);
+        for (String s : properties.keySet()) {
+            jChild.append(s, properties.get(s).toString());
+        }
+        return jObject;
+    }
 }

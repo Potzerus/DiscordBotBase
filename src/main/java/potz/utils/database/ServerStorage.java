@@ -1,6 +1,8 @@
 package potz.utils.database;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import potz.utils.Module;
 
 import java.io.Serializable;
@@ -23,15 +25,26 @@ public class ServerStorage implements Serializable, Iterable<Char> {
 
     }
 
+    public ServerStorage(JSONObject jsonObject,State parent) {
+        this(jsonObject.getLong("id"),parent);
+        JSONArray jsonArray=jsonObject.getJSONArray("players");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            Char c=new Char(jsonArray.getJSONObject(0),this);
+            players.put(c.getId(),c);
+        }
+        JSONObject jo =jsonObject.getJSONObject("properties");
+        for (String s :jo.keySet()) {
+            properties.put(s,jo.get(s));
+        }
+    }
+
     public Char addPlayer(long userId) {
         return addPlayer(null, userId);
     }
 
     public Char addPlayer(String name, long userId) {
-        if (!players.containsKey(userId)) {
-            players.put(userId, new Char(userId, name, this));
+            players.putIfAbsent(userId, new Char(userId, name, this));
             return players.get(userId);
-        } else return null;
     }
 
 
@@ -44,8 +57,7 @@ public class ServerStorage implements Serializable, Iterable<Char> {
     }
 
     public Char getOrAddPlayer(long playerId) {
-        if (!players.containsKey(playerId))
-            players.put(playerId, new Char(playerId, this));
+        players.putIfAbsent(playerId, new Char(playerId, this));
         return players.get(playerId);
     }
 
@@ -107,5 +119,15 @@ public class ServerStorage implements Serializable, Iterable<Char> {
                 activeGames) {
             m.tick();
         }
+    }
+
+    public JSONObject toJSON() {
+        JSONObject jObject=new JSONObject();
+        JSONArray jArray=new JSONArray();
+        jObject.append("players",jArray);
+        for (Char c : players.values()) {
+            jArray.put(c.toJSON());
+        }
+        return jObject;
     }
 }

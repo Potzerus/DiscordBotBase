@@ -6,13 +6,35 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class State implements Serializable,Iterable<ServerStorage> {
+import org.json.*;
 
-    private Map<Long, ServerStorage> servers;
+public class State implements Serializable, Iterable<ServerStorage> {
+
+    private Map<Long, ServerStorage> servers = new HashMap<>();
 
     public State() {
-        servers = new HashMap<>();
+
         //loadFile();
+    }
+
+    public State(JSONObject object) {
+        if (object != null) {
+            JSONArray jsonArray = object.getJSONArray("servers");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                ServerStorage serverStorage = new ServerStorage((JSONObject) jsonArray.get(i),this);
+                servers.put(serverStorage.getServerId(), serverStorage);
+            }
+        }
+    }
+
+    public JSONObject toJSON(){
+        JSONObject jsonObject=new JSONObject();
+        JSONArray jsonArray=new JSONArray();
+        jsonObject.append("servers",jsonArray);
+        for (long id:servers.keySet()) {
+            jsonArray.put(servers.get(id).toJSON());
+        }
+        return jsonObject;
     }
 
     public String toString() {
@@ -23,11 +45,11 @@ public class State implements Serializable,Iterable<ServerStorage> {
             outputList.append(serverStorage.getServerName() + ", ");
         }
 
-        return "Servers={" + outputList.toString().substring(0, outputList.toString().length()<2?0:outputList.toString().length() - 2) + "}";
+        return "Servers={" + outputList.toString().substring(0, outputList.toString().length() < 2 ? 0 : outputList.toString().length() - 2) + "}";
     }
 
     public ServerStorage addServer(long serverId) {
-        ServerStorage ss = new ServerStorage(serverId,this);
+        ServerStorage ss = new ServerStorage(serverId, this);
         servers.put(serverId, ss);
         return ss;
     }
@@ -154,12 +176,12 @@ public class State implements Serializable,Iterable<ServerStorage> {
                         JSONObject player = (JSONObject) players.get(j);
                         long userId = player.getLong("userId");
                         System.out.println(addPlayer(serverId, userId));
-                        JSONObject stats = ((JSONObject) player.get("stats"));
-                        Iterator staterator = stats.toMap().keySet().iterator();
+                        JSONObject properties = ((JSONObject) player.get("properties"));
+                        Iterator staterator = properties.toMap().keySet().iterator();
                         while (staterator.hasNext()) {
                             String statName = (String) staterator.next();
                             getPlayerDirectly(serverId, userId).
-                                    setStat(statName, stats.get(statName).toString());
+                                    setStat(statName, properties.get(statName).toString());
                         }
 
                     }
@@ -181,7 +203,7 @@ public class State implements Serializable,Iterable<ServerStorage> {
         return servers.values().iterator();
     }
 
-    public void tick(){
+    public void tick() {
         for (ServerStorage ss : servers.values()) {
             ss.tick();
         }
