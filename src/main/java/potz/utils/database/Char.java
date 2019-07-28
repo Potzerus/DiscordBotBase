@@ -29,7 +29,7 @@ public class Char implements Serializable {
 
     public Char(long userId, ModuleStorage moduleStorage) {
         this.userId = userId;
-        this.name = name;
+        this.name = "Unnamed";
         //this.moduleStorage=moduleStorage;
     }
 
@@ -50,11 +50,7 @@ public class Char implements Serializable {
     }
 
     public void setStat(String name, Object value) {
-        if (properties.containsKey(name)) {
-            properties.replace(name, value);
-        } else {
             properties.put(name, value);
-        }
     }
 
     public void removeStat(String name) {
