@@ -21,17 +21,17 @@ public class State implements Serializable, Iterable<ServerStorage> {
         if (object != null) {
             JSONArray jsonArray = object.getJSONArray("servers");
             for (int i = 0; i < jsonArray.length(); i++) {
-                ServerStorage serverStorage = new ServerStorage((JSONObject) jsonArray.get(i),this);
+                ServerStorage serverStorage = new ServerStorage((JSONObject) jsonArray.get(i), this);
                 servers.put(serverStorage.getServerId(), serverStorage);
             }
         }
     }
 
-    public JSONObject toJSON(){
-        JSONObject jsonObject=new JSONObject();
-        JSONArray jsonArray=new JSONArray();
-        jsonObject.append("servers",jsonArray);
-        for (long id:servers.keySet()) {
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        jsonObject.append("servers", jsonArray);
+        for (long id : servers.keySet()) {
             jsonArray.put(servers.get(id).toJSON());
         }
         return jsonObject;
@@ -50,8 +50,8 @@ public class State implements Serializable, Iterable<ServerStorage> {
 
     public ServerStorage addServer(long serverId) {
         ServerStorage ss = new ServerStorage(serverId, this);
-        servers.put(serverId, ss);
-        return ss;
+        servers.putIfAbsent(serverId, ss);
+        return servers.get(serverId);
     }
 
     /*
@@ -69,14 +69,20 @@ public class State implements Serializable, Iterable<ServerStorage> {
     }
 
     public Char getPlayerDirectly(long serverId, long userId) {
-        ServerStorage intermediate;
-        try {
-            intermediate = this.getServer(serverId);
+        ServerStorage intermediate = this.getServer(serverId);
+        if (intermediate != null)
+
             return intermediate.getPlayer(userId);
-        } catch (NullPointerException e) {
-            //Main.reply("Player not found in " + null);
-            return null;
-        }
+        return null;
+    }
+
+    public Char getOrAddPlayer(long serverId, long userId){
+        return addServer(serverId).getOrAddPlayer(userId);
+
+    }
+
+    public boolean hasServer(long serverId){
+        return servers.containsKey(serverId);
     }
 
 
