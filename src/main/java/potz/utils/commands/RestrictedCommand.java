@@ -21,9 +21,18 @@ public abstract class RestrictedCommand extends Command {
         this.requiredPerm = requiredPerm;
 
     }
+    public RestrictedCommand(String identifier,String description) {
+        super(identifier,description);
+        this.requiredPerm = null;
+
+    }
 
     public boolean hasPerm(User sender, TextChannel c, Server s) {
-        boolean output = Utils.hasPermission(sender, s, requiredPerm);
+        boolean output;
+        if(requiredPerm!=null)
+        output = Utils.hasPermission(sender, s, requiredPerm);
+        else
+            return sender.isBotOwner();
         if (!output)
             invalidPermResponse(c);
         return output;

@@ -76,12 +76,18 @@ public class State implements Serializable, Iterable<ServerStorage> {
         return null;
     }
 
-    public Char getOrAddPlayer(long serverId, long userId){
-        return addServer(serverId).getOrAddPlayer(userId);
+    public Char getOrAddPlayer(long serverId, long userId) {
+        return getOrAddServer(serverId).getOrAddPlayer(userId);
 
     }
 
-    public boolean hasServer(long serverId){
+    private ServerStorage getOrAddServer(long serverId) {
+        if (!hasServer(serverId))
+            addServer(serverId);
+        return getServer(serverId);
+    }
+
+    public boolean hasServer(long serverId) {
         return servers.containsKey(serverId);
     }
 
